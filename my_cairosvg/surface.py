@@ -424,6 +424,12 @@ class Surface(object):
             # Fill
             self.context.save()
             paint_source, paint_color = paint(node.get('fill', 'black'))
+            # TODO (My code starts)
+            paint_color = node.get('structure_id')
+            if paint_color is None:
+                paint_color = 0
+            paint_color = int(paint_color)
+            # TODO (My code ends)
             if not gradient_or_pattern(self, node, paint_source):
                 if node.get('fill-rule') == 'evenodd':
                     self.context.set_fill_rule(cairo.FILL_RULE_EVEN_ODD)
@@ -442,6 +448,12 @@ class Surface(object):
             self.context.set_line_width(
                 size(self, node.get('stroke-width', '1')))
             paint_source, paint_color = paint(node.get('stroke'))
+            # TODO (My code starts)
+            paint_color = node.get('structure_id')
+            if paint_color is None:
+                paint_color = 0
+            paint_color = int(paint_color)
+            # TODO (My code ends)
             if not gradient_or_pattern(self, node, paint_source):
                 self.context.set_source_rgba(
                     *color(paint_color, stroke_opacity))

@@ -209,12 +209,48 @@ HEX_RRGGBB = re.compile('#[0-9a-f]{6}')
 HEX_RGB = re.compile('#[0-9a-f]{3}')
 
 
+# TODO (I have added the two following helpers)
+def pad_to(binary_number, num_bits):
+    """
+    Pad `binary_number` to the left until is `num_bits` long.
+    """
+    num_padding_zeros = num_bits - len(binary_number)
+    assert num_padding_zeros >= 0
+    prefix = '0' * num_padding_zeros
+    binary_number_padded = prefix + binary_number
+    return binary_number_padded
+
+
+def from_id_to_rgb(structure_id):
+    """
+    Convert an integer (here representing a structure id)
+    into a RGB number.
+    """
+    # convert to binary
+    id_binary = bin(structure_id)
+    # take out '0b'
+    id_binary = id_binary[2:]
+    assert len(id_binary) <= 24
+    # convert to 24 bit
+    id_binary_24 = pad_to(id_binary, 24)
+    # get RGB coordinates (8 bit each)
+    r = int(id_binary_24[0:8], 2)
+    g = int(id_binary_24[8:16], 2)
+    b = int(id_binary_24[16:24], 2)
+    return (r, g, b)
+
+
 def color(string, opacity=1):
     """Replace ``string`` representing a color by a RGBA tuple.
 
     See http://www.w3.org/TR/SVG/types.html#DataTypeColor
 
     """
+    # TODO (Start my code)
+    r, g, b = from_id_to_rgb(string)
+    return (r, g, b, 1)
+    # TODO (end my code)
+
     if not string:
         return (0, 0, 0, 0)
 
