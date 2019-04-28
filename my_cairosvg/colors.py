@@ -230,7 +230,9 @@ def from_id_to_rgb(structure_id):
     id_binary = bin(structure_id)
     # take out '0b'
     id_binary = id_binary[2:]
-    assert len(id_binary) <= 24
+    if len(id_binary) > 24
+        print('id {}, len {} :('.format(id_binary, len(id_binary)))
+        raise BaseException
     # convert to 24 bit
     id_binary_24 = pad_to(id_binary, 24)
     # get RGB coordinates (8 bit each)
