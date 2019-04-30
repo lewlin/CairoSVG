@@ -20,6 +20,7 @@ SVG colors.
 """
 
 import re
+import os
 
 COLORS = {
     'aliceblue': (240 / 255, 248 / 255, 255 / 255, 1),
