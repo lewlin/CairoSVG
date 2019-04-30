@@ -471,16 +471,16 @@ class Surface(object):
                 self.draw(child)
 
         # Apply filter, mask and opacity
-        if filter_ or mask or (opacity < 1 and node.children):
-            self.context.pop_group_to_source()
-            if filter_:
-                apply_filter_before_painting(self, node, filter_)
-            if mask in self.masks:
-                paint_mask(self, node, mask, opacity)
-            else:
-                self.context.paint_with_alpha(opacity)
-            if filter_:
-                apply_filter_after_painting(self, node, filter_)
+        # if filter_ or mask or (opacity < 1 and node.children):
+        #     self.context.pop_group_to_source()
+        #     if filter_:
+        #         apply_filter_before_painting(self, node, filter_)
+        #     if mask in self.masks:
+        #         paint_mask(self, node, mask, opacity)
+        #     else:
+        #         self.context.paint_with_alpha(opacity)
+        #     if filter_:
+        #         apply_filter_after_painting(self, node, filter_)
 
         # Clean cursor's position after 'text' tags
         if node.tag == 'text':
