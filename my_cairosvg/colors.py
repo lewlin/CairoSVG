@@ -20,7 +20,10 @@ SVG colors.
 """
 
 import re
+# TODO Start my code
 import os
+home = os.environ['HOME']
+# TODO End code
 
 COLORS = {
     'aliceblue': (240 / 255, 248 / 255, 255 / 255, 1),
