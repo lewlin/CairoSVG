@@ -22,6 +22,8 @@ SVG colors.
 import re
 # TODO Start my code
 import os
+import pandas as pd
+import numpy as np
 home = os.environ['HOME']
 # TODO End code
 
