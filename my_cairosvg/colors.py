@@ -209,10 +209,27 @@ HEX_RRGGBB = re.compile('#[0-9a-f]{6}')
 HEX_RGB = re.compile('#[0-9a-f]{3}')
 
 
-# TODO (I have added the two following helpers)
+# TODO (Start my code)
+def get_id2ix():
+    """
+        Return dictionary to convert structure_id into smaller number
+        amenable to be cast into 24 bit.
+    """
+    metadata_path = os.path.join(home, 'git/brain/metadata')
+    ont1_path = os.path.join(metadata_path, 'onthology_id_1.pkl')
+    assert os.path.isfile(ont1_path)
+    df = pd.read_pickle(ont1_path)
+    structure_ids = df['id'].unique()
+#     print("Found {} structures".format(len(structure_ids)))
+#     print("0 in structure id? {}".format(0 in structure_ids))
+#     ix_2_id = {ix+1:structure_id for ix, structure_id in enumerate(structure_ids)}
+    id_2_ix = {structure_id:ix+1 for ix, structure_id in enumerate(structure_ids)}
+    return id_2_ix
+
+
 def pad_to(binary_number, num_bits):
     """
-    Pad `binary_number` to the left until is `num_bits` long.
+        Pad `binary_number` to the left until is `num_bits` long.
     """
     num_padding_zeros = num_bits - len(binary_number)
     assert num_padding_zeros >= 0
@@ -223,23 +240,53 @@ def pad_to(binary_number, num_bits):
 
 def from_id_to_rgb(structure_id):
     """
-    Convert an integer (here representing a structure id)
-    into a RGB number.
+        Convert `structure_id` into a RGB number.
     """
+    # Get converter for structure id
+    id2ix = get_id2ix()
+    if structure_id == 0:
+        return (0, 0, 0)
+    else:
+        compressed_id = id2ix[structure_id]
     # convert to binary
-    id_binary = bin(structure_id)
+    id_binary = bin(compressed_id)
     # take out '0b'
     id_binary = id_binary[2:]
-    if len(id_binary) > 24:
-        print('id {}, len {} :('.format(id_binary, len(id_binary)))
-        raise BaseException
+    assert len(id_binary) <= 24
     # convert to 24 bit
     id_binary_24 = pad_to(id_binary, 24)
     # get RGB coordinates (8 bit each)
     r = int(id_binary_24[0:8], 2)
     g = int(id_binary_24[8:16], 2)
     b = int(id_binary_24[16:24], 2)
+    assert (r, g, b) != (0, 0, 0)
     return (r, g, b)
+
+
+def get_ix2id():
+    """
+        Return dictionary to convert id used in images back to structure id
+    """
+    metadata_path = os.path.join(home, 'git/brain/metadata')
+    ont1_path = os.path.join(metadata_path, 'onthology_id_1.pkl')
+    assert os.path.isfile(ont1_path)
+    df = pd.read_pickle(ont1_path)
+    structure_ids = df['id'].unique()
+    ix_2_id = {ix+1:structure_id for ix, structure_id in enumerate(structure_ids)}
+    return ix_2_id
+
+
+def from_rgb_to_id(r, g, b):
+    if (r, g, b) == (0, 0, 0):
+        return 0
+    ix2id = get_ix2id()
+    r_bin = pad_to(bin(r)[2:], 8)
+    g_bin = pad_to(bin(g)[2:], 8)
+    b_bin = pad_to(bin(b)[2:], 8)
+    compressed_id = int(r_bin + g_bin + b_bin, 2)
+    structure_id = ix2id[compressed_id]
+    return structure_id
+# TODO (End my code)
 
 
 def color(string, opacity=1):
