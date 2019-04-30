@@ -310,7 +310,7 @@ def color(string, opacity=1):
     """
     # TODO (Start my code)
     r, g, b = from_id_to_rgb(string)
-    return (r, g, b, 0)
+    return (r, g, b, 255)
     # TODO (end my code)
 
     if not string:
