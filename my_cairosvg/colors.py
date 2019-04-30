@@ -261,6 +261,7 @@ def from_id_to_rgb(structure_id):
     assert len(id_binary) <= 24
     # convert to 24 bit
     id_binary_24 = pad_to(id_binary, 24)
+    assert len(id_binary_24) == 24
     # get RGB coordinates (8 bit each)
     r = int(id_binary_24[0:8], 2)
     g = int(id_binary_24[8:16], 2)
@@ -283,6 +284,9 @@ def get_ix2id():
 
 
 def from_rgb_to_id(r, g, b):
+    """
+        Convert RGB color back to structure_id.
+    """
     if (r, g, b) == (0, 0, 0):
         return 0
     ix2id = get_ix2id()
@@ -290,7 +294,10 @@ def from_rgb_to_id(r, g, b):
     g_bin = pad_to(bin(g)[2:], 8)
     b_bin = pad_to(bin(b)[2:], 8)
     compressed_id = int(r_bin + g_bin + b_bin, 2)
-    structure_id = ix2id[compressed_id]
+    try:
+        structure_id = ix2id[compressed_id]
+    except:
+        print(compressed_id, r_bin, g_bin, b_bin, r, g, b)
     return structure_id
 # TODO (End my code)
 
